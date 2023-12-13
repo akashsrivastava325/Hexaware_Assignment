@@ -103,12 +103,12 @@ VALUES
 
 
 
--- Update the daily rate for a Mercedes car to 68
+-- 1 Update the daily rate for a Mercedes car to 68
 UPDATE Vehicle
 SET dailyRate = 68
 WHERE make = 'Mercedes';
 
--- Delete a specific customer and all associated leases and payments
+-- 2 Delete a specific customer and all associated leases and payments
 DELETE FROM Payment
 WHERE leaseID IN (SELECT leaseID FROM Lease WHERE customerID = 3);
 
@@ -118,83 +118,83 @@ WHERE customerID = 3;
 DELETE FROM Customer
 WHERE customerID = 3;
 
--- Rename the "paymentDate" column in the Payment table to "transactionDate"
+-- 3 Rename the "paymentDate" column in the Payment table to "transactionDate"
 EXEC sp_rename 'Payment.paymentDate', 'transactionDate', 'COLUMN';
 
--- Find a specific customer by email
+-- 4 Find a specific customer by email
 SELECT * FROM Customer
 WHERE email = 'robert@example.com';
 
--- Get active leases for a specific customer
+-- 5 Get active leases for a specific customer
 SELECT * FROM Lease
 WHERE customerID = 1
 AND GETDATE() BETWEEN startDate AND endDate;
 
--- Find all payments made by a customer with a specific phone number
+-- 6 Find all payments made by a customer with a specific phone number
 SELECT Payment.*
 FROM Payment
 JOIN Lease ON Payment.leaseID = Lease.leaseID
 JOIN Customer ON Lease.customerID = Customer.customerID
 WHERE Customer.phoneNumber = '555-555-5555';
 
--- Calculate the average daily rate of all available cars
+-- 7 Calculate the average daily rate of all available cars
 SELECT AVG(dailyRate) AS AverageDailyRate
 FROM Vehicle
 WHERE status = 'available';
 
--- Find the car with the highest daily rate
+-- 8 Find the car with the highest daily rate
 SELECT TOP 1 *
 FROM Vehicle
 ORDER BY dailyRate DESC;
 
--- Retrieve all cars leased by a specific customer
+-- 9 Retrieve all cars leased by a specific customer
 SELECT Vehicle.*
 FROM Vehicle
 JOIN Lease ON Vehicle.vehicleID = Lease.vehicleID
 WHERE Lease.customerID = 2;
 
--- Find the details of the most recent lease
+-- 10 Find the details of the most recent lease
 SELECT TOP 1 *
 FROM Lease
 ORDER BY startDate DESC;
 
--- List all payments made in the year 2023
+-- 11 List all payments made in the year 2023
 SELECT *
 FROM Payment
 WHERE YEAR(transactionDate) = 2023;
 
--- Retrieve customers who have not made any payments
+-- 12 Retrieve customers who have not made any payments
 SELECT *
 FROM Customer
 WHERE customerID NOT IN (SELECT DISTINCT customerID FROM Payment);
 
--- Retrieve Car Details and Their Total Payments
+-- 13 Retrieve Car Details and Their Total Payments
 SELECT Vehicle.*, ISNULL(SUM(Payment.amount), 0) AS TotalPayments
 FROM Vehicle
 LEFT JOIN Lease ON Vehicle.vehicleID = Lease.vehicleID
 LEFT JOIN Payment ON Lease.leaseID = Payment.leaseID
 GROUP BY Vehicle.vehicleID, Vehicle.make, Vehicle.model, Vehicle.year, Vehicle.dailyRate, Vehicle.status, Vehicle.passengerCapacity, Vehicle.engineCapacity;
 
--- Calculate Total Payments for Each Customer
+-- 14 Calculate Total Payments for Each Customer
 SELECT Customer.*, ISNULL(SUM(Payment.amount), 0) AS TotalPayments
 FROM Customer
 LEFT JOIN Lease ON Customer.customerID = Lease.customerID
 LEFT JOIN Payment ON Lease.leaseID = Payment.leaseID
 GROUP BY Customer.customerID, Customer.firstName, Customer.lastName, Customer.email, Customer.phoneNumber;
 
--- List Car Details for Each Lease
+-- 15 List Car Details for Each Lease
 SELECT Lease.*, Vehicle.*
 FROM Lease
 JOIN Vehicle ON Lease.vehicleID = Vehicle.vehicleID;
 
--- Retrieve Details of Active Leases with Customer and Car Information
+-- 16 Retrieve Details of Active Leases with Customer and Car Information
 SELECT Lease.*, Customer.*, Vehicle.*
 FROM Lease
 JOIN Customer ON Lease.customerID = Customer.customerID
 JOIN Vehicle ON Lease.vehicleID = Vehicle.vehicleID
 WHERE GETDATE() BETWEEN Lease.startDate AND Lease.endDate;
 
--- Find the Customer Who Has Spent the Most on Leases
+-- 17 Find the Customer Who Has Spent the Most on Leases
 SELECT TOP 1 Customer.*, ISNULL(SUM(Payment.amount), 0) AS TotalPayments
 FROM Customer
 LEFT JOIN Lease ON Customer.customerID = Lease.customerID
@@ -202,7 +202,7 @@ LEFT JOIN Payment ON Lease.leaseID = Payment.leaseID
 GROUP BY Customer.customerID, Customer.firstName, Customer.lastName, Customer.email, Customer.phoneNumber
 ORDER BY TotalPayments DESC;
 
--- List All Cars with Their Current Lease Information
+-- 18 List All Cars with Their Current Lease Information
 SELECT Vehicle.*, Lease.*, Customer.*
 FROM Vehicle
 LEFT JOIN Lease ON Vehicle.vehicleID = Lease.vehicleID
