@@ -181,11 +181,11 @@ FROM products
 GROUP BY product_id;
 
 
---10. Find the Maximum Order Amount for Each Customer:
-SELECT c.customer_id, MAX(o.total_price) as max_order_amount
+--10. Calculate the Total Amount Spent by Each Customer:
+SELECT c.customer_id, c.name, SUM(o.total_price) as total_amount_spent
 FROM customers c
-LEFT JOIN orders o ON c.customer_id = o.customer_id
-GROUP BY c.customer_id;
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name;
 
 
 --11. Find the Average Order Amount for Each Customer:
