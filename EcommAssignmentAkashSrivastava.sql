@@ -158,7 +158,7 @@ SELECT * FROM orders
 WHERE total_price BETWEEN 500.00 AND 1000.00;
 
 
---6. Find Products which name ends with the letter ‘r’:
+--6. Find Products which name ends with the letter â€˜râ€™:
 SELECT * FROM products
 WHERE name LIKE '%r';
 
@@ -232,13 +232,9 @@ SELECT @totalRevenue = SUM(oi.quantity * p.price)
 FROM order_items oi
 JOIN products p ON oi.product_id = p.product_id;
 
-DECLARE @productRevenue DECIMAL(10, 2);
-SELECT @productRevenue = oi.quantity * p.price
-FROM order_items oi
-JOIN products p ON oi.product_id = p.product_id;
 
 SELECT p.*, 
-       (@productRevenue / @totalRevenue) * 100 AS revenue_percentage
+       (oi.quantity * p.price / @totalRevenue) * 100 AS revenue_percentage
 FROM products p
 JOIN order_items oi ON p.product_id = oi.product_id;
 
