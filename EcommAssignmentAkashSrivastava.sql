@@ -245,7 +245,10 @@ WHERE stockQuantity < (SELECT AVG(stockQuantity) FROM products);
 
 
 --19. Subquery to Find Customers Who Placed High-Value Orders:
-SELECT DISTINCT c.customer_id, c.name
-FROM customers c
-JOIN orders o ON c.customer_id = o.customer_id
-WHERE o.total_price > 1000.00;
+SELECT customer_id, name
+FROM customers
+WHERE customer_id IN (
+    SELECT DISTINCT o.customer_id
+    FROM orders o
+    WHERE o.total_price > 1000.00
+);
